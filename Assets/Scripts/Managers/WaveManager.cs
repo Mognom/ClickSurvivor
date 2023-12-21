@@ -1,6 +1,7 @@
 using MognomUtils;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class WaveManager : Singleton<WaveManager> {
 
@@ -14,6 +15,7 @@ public class WaveManager : Singleton<WaveManager> {
     [SerializeField] private float spawnRangeRadious;
 
     [SerializeField] private FloatEventChannel enemyDeathChannel;
+    [SerializeField] private FloatEventChannel waveOverChannel;
     private float spawnRate;
     private float timeSinceLastEnemy;
 
@@ -21,17 +23,15 @@ public class WaveManager : Singleton<WaveManager> {
 
     protected override void Awake() {
         base.Awake();
-        enemyList = new List<EnemyBehaviour> ();
+        enemyList = new List<EnemyBehaviour>();
         remainingEnemyPoints = enemyPoints * difficultyLevel;
 
         spawnRate = spawnTime / remainingEnemyPoints;
-
-
     }
 
     // Update is called once per frame
     private void Update() {
-        if (remainingEnemyPoints > 0) { 
+        if (remainingEnemyPoints > 0) {
             timeSinceLastEnemy += Time.deltaTime;
             if (timeSinceLastEnemy > spawnRate) {
                 Vector3 spawnLocation = (Quaternion.Euler(0, 0, Random.Range(0, 360f)) * Vector2.up) * spawnRangeRadious;
@@ -48,6 +48,14 @@ public class WaveManager : Singleton<WaveManager> {
 
     private void EnemyDied(EnemyBehaviour enemy) {
         enemyList.Remove(enemy);
+
+        if (enemyList.Count <= 0) {
+            waveOverChannel.PostEvent(difficultyLevel);
+
+            // TODO remove in favor of LootManager / SceneManager / GameManager
+
+            SceneManager.LoadScene(1);
+        }
     }
 
     public List<EnemyBehaviour> GetCurrentEnemies() {

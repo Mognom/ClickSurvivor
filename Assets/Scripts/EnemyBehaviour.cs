@@ -25,7 +25,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
     public void OnCollisionEnter2D(Collision2D collision) {
         PlayerHealth.I.TakeDamage(damage);
-        
+
         this.gameObject.Recycle();
     }
 
