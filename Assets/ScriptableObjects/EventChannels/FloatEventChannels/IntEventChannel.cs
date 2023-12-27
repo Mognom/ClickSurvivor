@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "EventChannels/FloatEventChannel")]
-public class FloatEventChannel : ScriptableObject {
-    public event Action<float> Channel;
+public class IntEventChannel : ScriptableObject {
+    public event Action<int> Channel;
 
-    public void PostEvent(float args) {
+    public void PostEvent(int args) {
         Channel?.Invoke(args);
     }
 }

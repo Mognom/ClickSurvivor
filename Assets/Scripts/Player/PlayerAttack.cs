@@ -11,7 +11,7 @@ public class PlayerAttack : MonoBehaviour {
     private PlayerInputActions playerInputActions;
 
     [SerializeField] private MultiProgressBar progressBar;
-    
+
     // Stats
     [SerializeField] private int clicksPerAttack;
     [SerializeField] private int baseAttackDamage;
@@ -22,6 +22,8 @@ public class PlayerAttack : MonoBehaviour {
 
     private float currentClicks;
 
+    private AudioSource attackAudioSource;
+
     private void Awake() {
         // Setup input
         playerInputActions = new PlayerInputActions();
@@ -29,6 +31,11 @@ public class PlayerAttack : MonoBehaviour {
         playerInputActions.Player.PlayerClick.performed += OnPlayerClick;
 
         currentClicks = 0;
+        attackAudioSource = GetComponent<AudioSource>();
+    }
+
+    private void OnDisable() {
+        playerInputActions.Player.PlayerClick.performed -= OnPlayerClick;
     }
 
     private void Start() {
@@ -57,12 +64,13 @@ public class PlayerAttack : MonoBehaviour {
                 ProyectileBehaviour newProyectile = proyectilePrefab.Spawn(transform.position, Quaternion.identity);
                 newProyectile.SetTargetAndDamage(target, attackDamage);
                 target.IncreaseIncommingDamage(attackDamage);
+                attackAudioSource.Play();
                 currentClicks -= clicksPerAttack;
             }
         }
 
         // Add autoclicks
-        currentClicks += clicksPerSecond;
+        currentClicks += clicksPerSecond * Time.deltaTime;
         //if (currentClicks != oldCurrentClicks) { 
         progressBar.SetValue(currentClicks / clicksPerAttack);
         //}

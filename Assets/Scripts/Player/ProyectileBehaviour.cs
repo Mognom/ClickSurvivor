@@ -13,8 +13,10 @@ public class ProyectileBehaviour : MonoBehaviour {
     }
 
     private void Update() {
-        if (target != null) {
+        if (target != null && target.isActiveAndEnabled) {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
+        } else {
+            this.Recycle();
         }
     }
 

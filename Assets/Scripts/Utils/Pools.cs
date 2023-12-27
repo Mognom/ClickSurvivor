@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
-using Object = UnityEngine.Object;
+using UnityEngine.SceneManagement;
 using GameObject = UnityEngine.GameObject;
+using Object = UnityEngine.Object;
 
 namespace MognomUtils {
     public class ObjectPool {
@@ -15,9 +14,19 @@ namespace MognomUtils {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Init() {
             // Reset the pools
+            Reset();
+
+            SceneManager.sceneLoaded += SceneLoadedCallback;
+        }
+
+        private static void Reset() {
             pools = new Dictionary<GameObject, List<GameObject>>();
             activeObjectsToPool = new Dictionary<GameObject, List<GameObject>>();
             poolParent = new GameObject("ObjectPool").transform;
+        }
+
+        private static void SceneLoadedCallback(Scene arg0, LoadSceneMode arg1) {
+            Reset();
         }
 
         public static T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : MonoBehaviour {
@@ -48,7 +57,6 @@ namespace MognomUtils {
             return newObject;
         }
 
-
         public static void Recycle<T>(T objectToRecycle) where T : Object {
             GameObject gO = objectToRecycle.GameObject();
             activeObjectsToPool.TryGetValue(gO, out List<GameObject> currentPool);
@@ -59,7 +67,7 @@ namespace MognomUtils {
             } else {
                 GameObject.Destroy(gO);
             }
-         }
+        }
 
         private static void GetMatchingPool<T>(T prefab, out List<GameObject> currentPool) where T : Object {
             GameObject gO = prefab.GameObject();

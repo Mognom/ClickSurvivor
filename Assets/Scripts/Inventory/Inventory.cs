@@ -140,7 +140,11 @@ public class Inventory {
 
     // Empty out the inventory
     public void Clear() {
-        inventoryItems = new InventorySlot[height, width];
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                inventoryItems[y, x].Item = null;
+            }
+        }
     }
 
     public AggregatedInventoryItemEffects GetAggregatedPlayerStats() {

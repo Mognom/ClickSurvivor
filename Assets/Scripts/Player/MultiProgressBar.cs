@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 public class MultiProgressBar : MonoBehaviour {
     [SerializeField] private Transform[] fillLevels;
     [SerializeField] private ParticleSystem increaseEffectParticles;
     private float currentValue;
-    
+
     // TODO smooth the fill level transition using Update and a lerp
 
     public void SetValue(float value) {
@@ -13,8 +12,8 @@ public class MultiProgressBar : MonoBehaviour {
         UpdateFillLevels();
     }
 
-    private void UpdateFillLevels () {
-        int lastFillLevel = (int) Mathf.Floor(currentValue);
+    private void UpdateFillLevels() {
+        int lastFillLevel = (int)Mathf.Floor(currentValue);
         float currentFillValue = currentValue - lastFillLevel;
 
         // When fully filled, ensure it does not try to fill an extra imaginary level

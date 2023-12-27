@@ -53,23 +53,37 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
         // TODO Fully render both inventories
+        FullyRenderInventories();
+        CurrentlyHeldItem = null;
+    }
 
-        //playerInventory
+    private void FullyRenderInventories() {
+        if (LocalGridsManager.I != null) {
+            int i = 0;
+            // render player inventory
+            for (int y = 0; y < playerInventoryDimensions.y; y++) {
+                for (int x = 0; x < playerInventoryDimensions.x; x++) {
+                    Item item = playerInventory.GetItemAt(x, y);
+                    if (item != null) {
+                        LocalGridsManager.I.SetSpritePlayerGrid(item.ItemSprite, i);
+                    }
+                    i++;
+                }
+            }
 
-        // DEBUG
-        // TODO remove
-        //lootInventory.InsertItem(debugItem, 0, 0);
-        //lootInventory.InsertItem(debugItem, 0, 1);
-        //lootInventory.InsertItem(debugItem, 0, 2);
-
-        playerInventory.InsertItem(debugItem, 0, 0);
-        playerInventory.InsertItem(debugItem, 0, 1);
-        playerInventory.InsertItem(debugItem, 0, 2);
-
-        if (LocalGridsManager.I) {
-            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 0);
-            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 1);
-            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 2);
+            i = 0;
+            // render loot inventory
+            for (int x = 0; x < lootInventoryDimensions.x; x++) {
+                for (int y = 0; y < lootInventoryDimensions.y; y++) {
+                    Item item = lootInventory.GetItemAt(x, y);
+                    if (item != null) {
+                        LocalGridsManager.I.SetSpriteLootGrid(item.ItemSprite, i);
+                    }
+                    i++;
+                }
+            }
+        } else {
+            CleanupLoot();
         }
     }
 
@@ -83,6 +97,12 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
         } else {
             TakeItem(isLoot, slotIndex);
         }
+    }
+
+    public void AddLoot(Item item1, Item item2, Item item3) {
+        lootInventory.InsertItem(item1, 0, 0);
+        lootInventory.InsertItem(item2, 0, 1);
+        lootInventory.InsertItem(item3, 0, 2);
     }
 
     private void TakeItem(bool isLoot, int slotIndex) {
@@ -118,9 +138,6 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
 
         // Redraw the sprite to show the new item placed
         SetSpriteOnGrid(CurrentlyHeldItem.ItemSprite, slotIndex, isLoot);
-
-        Debug.Log(CurrentlyHeldItem.StatModifier.ClicksPerSecond);
-        Debug.Log(playerInventory.GetAggregatedPlayerStats().PlayerStats.ClicksPerSecond);
 
         // Update the currently held item if there was something on the spot
         CurrentlyHeldItem = targetSpot;

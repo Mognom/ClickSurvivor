@@ -1,7 +1,6 @@
 using MognomUtils;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class WaveManager : Singleton<WaveManager> {
 
@@ -10,14 +9,13 @@ public class WaveManager : Singleton<WaveManager> {
     [SerializeField] private EnemyBehaviour bigEnemyPrefab;
     [SerializeField] private EnemyBehaviour giantEnemyPrefab;
 
-    [SerializeField] private int difficultyLevel;
     [SerializeField] private int enemyPoints;
 
     [SerializeField] private float spawnTime;
     // Radious of the circle around the player (0,0) where enemies are allowed to spawn 
     [SerializeField] private float spawnRangeRadious;
 
-    [SerializeField] private FloatEventChannel waveOverChannel;
+    [SerializeField] private IntEventChannel waveOverChannel;
     private float spawnRate;
     private float timeSinceLastEnemy;
 
@@ -27,12 +25,15 @@ public class WaveManager : Singleton<WaveManager> {
     private int bigCount;
     private int giantCount;
 
-    protected override void Awake() {
-        base.Awake();
+    private AudioSource audioSource;
+
+    private void Start() {
         enemyList = new List<EnemyBehaviour>();
-        remainingEnemyPoints = enemyPoints * difficultyLevel;
+        remainingEnemyPoints = enemyPoints * GameStateManager.I.CurrentWave;
 
         spawnRate = spawnTime / remainingEnemyPoints;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -45,7 +46,7 @@ public class WaveManager : Singleton<WaveManager> {
 
                 EnemyBehaviour newEnemy;
                 if (smallCount / 2 > bigCount && remainingEnemyPoints >= 2) {
-                    if (bigCount  / 2 > giantCount && remainingEnemyPoints >= 4) {
+                    if (bigCount / 2 > giantCount && remainingEnemyPoints >= 4) {
                         newEnemy = giantEnemyPrefab.Spawn(spawnLocation, Quaternion.identity);
                         remainingEnemyPoints -= 4;
                         giantCount++;
@@ -71,12 +72,11 @@ public class WaveManager : Singleton<WaveManager> {
         enemyList.Remove(enemy);
 
         if (enemyList.Count <= 0) {
-            waveOverChannel.PostEvent(difficultyLevel);
-
-            // TODO remove in favor of LootManager / SceneManager / GameManager
-
-            SceneManager.LoadScene(1);
+            waveOverChannel.PostEvent(enemyPoints * GameStateManager.I.CurrentWave);
         }
+
+        // TODO move to a global enemyAudio script
+        audioSource.Play();
     }
 
     public List<EnemyBehaviour> GetCurrentEnemies() {

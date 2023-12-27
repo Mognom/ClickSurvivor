@@ -46,7 +46,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public void ReceiveDamage(float damage) {
         currentHealth -= damage;
         if (currentHealth <= 0) {
-            var lol = deathEffect.Spawn(transform.position, transform.rotation);
+            deathEffect.Spawn(transform.position, transform.rotation);
             this.gameObject.Recycle();
         }
     }
