@@ -1,56 +1,72 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using GameObject = UnityEngine.GameObject;
 
 namespace MognomUtils {
     public class ObjectPool {
-        private static Dictionary<Type, List<Object>> pools;
+        private static Dictionary<GameObject, List<GameObject>> pools;
+        private static Dictionary<GameObject, List<GameObject>> activeObjectsToPool;
         private static Transform poolParent;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Init() {
             // Reset the pools
-            pools = new Dictionary<Type, List<Object>>();
+            pools = new Dictionary<GameObject, List<GameObject>>();
+            activeObjectsToPool = new Dictionary<GameObject, List<GameObject>>();
             poolParent = new GameObject("ObjectPool").transform;
         }
 
-        public static T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : Object {
-            T newObject;
-            GameObject newGameObject;
-            GetMatchingPool(prefab, out List<Object> currentPool);
+        public static T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : MonoBehaviour {
+            return Spawn(prefab.GameObject(), position, rotation).GetComponent<T>();
+        }
 
+        public static GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation) {
+            GameObject newObject;
+            GameObject newGameObject;
+            GetMatchingPool(prefab, out List<GameObject> currentPool);
 
             if (currentPool.Count > 0) {
                 // Get a recycled object
-                newObject = (T)currentPool[0];
+                newObject = currentPool[0];
                 currentPool.RemoveAt(0);
                 newGameObject = newObject.GameObject();
                 newGameObject.transform.SetPositionAndRotation(position, rotation);
             } else {
                 // Create a new object if none are available
-                newObject = (T)Object.Instantiate(prefab, position, rotation);
+                newObject = GameObject.Instantiate(prefab, position, rotation);
                 newGameObject = newObject.GameObject();
             }
 
+            activeObjectsToPool.Add(newGameObject, currentPool);
             newGameObject.SetActive(true);
             newGameObject.transform.SetParent(poolParent);
 
             return newObject;
         }
 
-        public static void Recycle<T>(T objectoToRecycle) where T : Object {
-            GetMatchingPool(objectoToRecycle, out List<Object> currentPool);
-            objectoToRecycle.GameObject().SetActive(false);
-            currentPool.Add(objectoToRecycle);
-        }
 
-        private static void GetMatchingPool<T>(T prefab, out List<Object> currentPool) where T : Object {
-            if (!pools.TryGetValue(typeof(T), out currentPool)) {
+        public static void Recycle<T>(T objectToRecycle) where T : Object {
+            GameObject gO = objectToRecycle.GameObject();
+            activeObjectsToPool.TryGetValue(gO, out List<GameObject> currentPool);
+            if (currentPool != null) {
+                gO.SetActive(false);
+                currentPool.Add(gO);
+                activeObjectsToPool.Remove(gO);
+            } else {
+                GameObject.Destroy(gO);
+            }
+         }
+
+        private static void GetMatchingPool<T>(T prefab, out List<GameObject> currentPool) where T : Object {
+            GameObject gO = prefab.GameObject();
+            if (!pools.TryGetValue(gO, out currentPool)) {
                 if (currentPool == null) {
-                    currentPool = new List<Object>();
-                    pools.Add(typeof(T), currentPool);
+                    currentPool = new List<GameObject>();
+                    pools.Add(gO, currentPool);
                 }
             }
         }

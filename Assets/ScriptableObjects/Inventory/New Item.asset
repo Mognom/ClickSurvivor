@@ -32,7 +32,7 @@ MonoBehaviour:
     clickMultiplier: 0
     damageMultiplier: 0
     damageIncrease: 0
-    clicksPerSecond: 0.2
+    clicksPerSecond: 0
     dropChanceIncrease: 0
   itemPrefab: {fileID: 0}
   itemSprite: {fileID: -328534302, guid: 7bb12e1a1363c514bb9ee72a9acafce2, type: 3}

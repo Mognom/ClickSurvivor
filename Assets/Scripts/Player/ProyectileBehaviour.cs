@@ -4,7 +4,7 @@ using UnityEngine;
 public class ProyectileBehaviour : MonoBehaviour {
 
     [SerializeField] private float speed;
-    [SerializeField] private float damage;
+    private float damage;
 
     private EnemyBehaviour target;
 
@@ -21,12 +21,13 @@ public class ProyectileBehaviour : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (target.gameObject.Equals(collision.gameObject)) {
             target.ReceiveDamage(damage);
-            this.gameObject.Recycle();
+            this.Recycle();
         }
     }
 
-    public void SetTarget(EnemyBehaviour target) {
+    public void SetTargetAndDamage(EnemyBehaviour target, float damage) {
         this.target = target;
+        this.damage = damage;
     }
 
     private void OnDisable() {

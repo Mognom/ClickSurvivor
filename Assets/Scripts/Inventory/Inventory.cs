@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static Inventory.AggregatedInventoryItemEffects;
 using static Item;
 
 public class Inventory {
@@ -29,7 +28,6 @@ public class Inventory {
         if (currentSlot == null) {
             return;
         }
-        // TODO
 
         // Remove the oldItem modifiers
         if (oldItem != null) {
@@ -173,14 +171,14 @@ public class Inventory {
             PlayerStats = playerStats;
             Items = items;
         }
+    }
 
-        public struct SpawnableItemEffects {
-            public GameObject Prefab { get; private set; }
-            public float StatsMultiplier { get; private set; }
-            public SpawnableItemEffects(GameObject prefab, float statsMultiplier) {
-                Prefab = prefab;
-                StatsMultiplier = statsMultiplier;
-            }
+    public struct SpawnableItemEffects {
+        public GameObject Prefab { get; private set; }
+        public float StatsMultiplier { get; private set; }
+        public SpawnableItemEffects(GameObject prefab, float statsMultiplier) {
+            Prefab = prefab;
+            StatsMultiplier = statsMultiplier;
         }
     }
 }

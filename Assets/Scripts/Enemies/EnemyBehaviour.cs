@@ -6,9 +6,12 @@ public class EnemyBehaviour : MonoBehaviour {
     [SerializeField] private int maxHealth;
     private float currentHealth;
     private float incommingDamage;
-    [SerializeField] private float speed;
-
+    [SerializeField] private float baseSpeed;
+    [SerializeField] private float speedRandomRange;
+    private float speed;
     [SerializeField] private float damage;
+
+    [SerializeField] private GameObject deathEffect;
 
     private Vector3 destination;
 
@@ -16,7 +19,9 @@ public class EnemyBehaviour : MonoBehaviour {
 
     private void OnEnable() {
         destination = PlayerHealth.I.transform.position;
+        incommingDamage = 0;
         currentHealth = maxHealth;
+        speed = baseSpeed + UnityEngine.Random.Range(-speedRandomRange, speedRandomRange);
     }
 
     private void Update() {
@@ -25,7 +30,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
     public void OnCollisionEnter2D(Collision2D collision) {
         PlayerHealth.I.TakeDamage(damage);
-
+        Debug.Log("Choca contra player");
         this.gameObject.Recycle();
     }
 
@@ -41,6 +46,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public void ReceiveDamage(float damage) {
         currentHealth -= damage;
         if (currentHealth <= 0) {
+            var lol = deathEffect.Spawn(transform.position, transform.rotation);
             this.gameObject.Recycle();
         }
     }
@@ -48,6 +54,4 @@ public class EnemyBehaviour : MonoBehaviour {
     public void OnDisable() {
         OnDeath?.Invoke(this);
     }
-
-
 }

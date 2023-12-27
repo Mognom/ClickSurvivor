@@ -3,14 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Item;
 
 public class PlayerAttack : MonoBehaviour {
 
     [SerializeField] private ProyectileBehaviour proyectilePrefab;
-    [SerializeField] private int clicksPerAttack;
-    private int currentClicks;
-
     private PlayerInputActions playerInputActions;
+
+    [SerializeField] private MultiProgressBar progressBar;
+    
+    // Stats
+    [SerializeField] private int clicksPerAttack;
+    [SerializeField] private int baseAttackDamage;
+    private float attackDamage;
+    private float increasePerClick = 1f;
+    private float clicksPerSecond;
+
+
+    private float currentClicks;
 
     private void Awake() {
         // Setup input
@@ -21,17 +31,47 @@ public class PlayerAttack : MonoBehaviour {
         currentClicks = 0;
     }
 
-    private void OnPlayerClick(InputAction.CallbackContext context) {
-        currentClicks++;
+    private void Start() {
+        attackDamage = baseAttackDamage;
+        ApplyStatsModifiers();
+    }
+
+    private void ApplyStatsModifiers() {
+        if (InventoryManager.I) {
+            PlayerStatsModifier statsModifier = InventoryManager.I.GetAggregatedInventoryItemEffects().PlayerStats;
+            // Update the stats the base player would use
+            clicksPerSecond = statsModifier.ClicksPerSecond;
+            attackDamage += statsModifier.DamageIncrease;
+            attackDamage *= 1 + statsModifier.DamageMultiplier;
+
+            increasePerClick = 1 + statsModifier.ClickMultiplier;
+        }
+    }
+
+    public void Update() {
+        float oldCurrentClicks = currentClicks;
+
         if (currentClicks >= clicksPerAttack) {
             EnemyBehaviour target = FindBestTarget();
             if (target != null) {
                 ProyectileBehaviour newProyectile = proyectilePrefab.Spawn(transform.position, Quaternion.identity);
-                newProyectile.SetTarget(target);
-                target.IncreaseIncommingDamage(newProyectile.GetDamage());
+                newProyectile.SetTargetAndDamage(target, attackDamage);
+                target.IncreaseIncommingDamage(attackDamage);
                 currentClicks -= clicksPerAttack;
             }
         }
+
+        // Add autoclicks
+        currentClicks += clicksPerSecond;
+        //if (currentClicks != oldCurrentClicks) { 
+        progressBar.SetValue(currentClicks / clicksPerAttack);
+        //}
+    }
+
+    private void OnPlayerClick(InputAction.CallbackContext context) {
+        currentClicks += increasePerClick;
+        progressBar.SetValue(currentClicks / clicksPerAttack);
+        progressBar.PlayEffect();
     }
 
     private EnemyBehaviour FindBestTarget() {

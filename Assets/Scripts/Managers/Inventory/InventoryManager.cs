@@ -2,7 +2,7 @@ using MognomUtils;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static Item;
+using static Inventory;
 
 public class InventoryManager : PersistentSingleton<InventoryManager> {
 
@@ -52,20 +52,25 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
     //}
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
-        Debug.Log("Scene changed");
         // TODO Fully render both inventories
 
         //playerInventory
 
         // DEBUG
         // TODO remove
-        lootInventory.InsertItem(debugItem, 0, 0);
-        lootInventory.InsertItem(debugItem, 0, 1);
-        lootInventory.InsertItem(debugItem, 0, 2);
-        LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 0);
-        LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 1);
-        LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 2);
+        //lootInventory.InsertItem(debugItem, 0, 0);
+        //lootInventory.InsertItem(debugItem, 0, 1);
+        //lootInventory.InsertItem(debugItem, 0, 2);
 
+        playerInventory.InsertItem(debugItem, 0, 0);
+        playerInventory.InsertItem(debugItem, 0, 1);
+        playerInventory.InsertItem(debugItem, 0, 2);
+
+        if (LocalGridsManager.I) {
+            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 0);
+            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 1);
+            LocalGridsManager.I.SetSpriteLootGrid(debugItem.ItemSprite, 2);
+        }
     }
 
     private void CleanupLoot() {
@@ -169,6 +174,10 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
                 }
             }
         }
+    }
+
+    public AggregatedInventoryItemEffects GetAggregatedInventoryItemEffects() {
+        return playerInventory.GetAggregatedPlayerStats();
     }
 }
 
