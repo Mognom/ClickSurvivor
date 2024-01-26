@@ -1,4 +1,5 @@
 using MognomUtils;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -31,6 +32,11 @@ public class GameStateManager : PersistentSingleton<GameStateManager> {
     }
 
     private void OnWaveOver(int pointsEarned) {
+        StartCoroutine(HandleWaveOver(pointsEarned));
+    }
+
+    private IEnumerator HandleWaveOver(int pointsEarned) {
+        yield return new WaitForSeconds(1);
         if (pointsEarned > 0) {
             SceneManager.LoadScene(inventorySceneName);
             currentState = GameState.INVENTORY;
