@@ -49,8 +49,7 @@ MonoBehaviour:
   smallEnemyPrefab: {fileID: 4823222947942027624, guid: 0589e3e74c087e049810fd967df18838, type: 3}
   bigEnemyPrefab: {fileID: 4823222947942027624, guid: 73980b2cd00a6414fa3f25187bb9af59, type: 3}
   giantEnemyPrefab: {fileID: 4823222947942027624, guid: 17753f8d86ac2f54fb429d1234391d1a, type: 3}
-  difficultyLevel: 1
-  enemyPoints: 14
+  enemyPoints: 12
   spawnTime: 4
   spawnRangeRadious: 5
   waveOverChannel: {fileID: 11400000, guid: e6f1842b53aa0884b9ce22fa59f8474b, type: 2}
@@ -70,6 +69,9 @@ MonoBehaviour:
   items:
   - {fileID: 11400000, guid: 34c5e8158d759bd468aecdf21a978677, type: 2}
   - {fileID: 11400000, guid: 4fe71adc5d9b5bf4ab41a69d95175535, type: 2}
+  - {fileID: 11400000, guid: 4fe71adc5d9b5bf4ab41a69d95175535, type: 2}
+  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
+  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
 --- !u!82 &6251239743776765577
 AudioSource:
   m_ObjectHideFlags: 0
