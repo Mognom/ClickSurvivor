@@ -53,6 +53,7 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
                     Item item = playerInventory.GetItemAt(x, y);
                     if (item != null) {
                         LocalGridsManager.I.SetSpritePlayerGrid(item.ItemSprite, i);
+                        SetBordersOnGrid(false, x, y);
                     }
                     i++;
                 }
