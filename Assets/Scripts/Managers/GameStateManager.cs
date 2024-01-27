@@ -16,6 +16,7 @@ public class GameStateManager : PersistentSingleton<GameStateManager> {
 
     public int CurrentWave { get; private set; }
     private int currentScore;
+    private int bestScore;
 
     private enum GameState {
         MAINMENU,
@@ -29,26 +30,30 @@ public class GameStateManager : PersistentSingleton<GameStateManager> {
         if (GameStateManager.I == this) {
             waveOverChannel.Channel += OnWaveOver;
             CurrentWave = 1;
-            currentScore = 0;
+            bestScore = 0;
+            currentScore = -1;
         }
     }
 
     private void OnWaveOver(int pointsEarned) {
-        StartCoroutine(HandleWaveOver(pointsEarned));
+        if (currentState == GameState.WAVE) {
+            if (pointsEarned > 0) {
+                currentState = GameState.INVENTORY;
+                CurrentWave++;
+                currentScore += pointsEarned;
+                StartCoroutine(SwapScene(inventorySceneName));
+            } else {
+                // Player lost
+                currentState = GameState.MAINMENU;
+                bestScore = Mathf.Max(currentScore, bestScore);
+                StartCoroutine(SwapScene(mainMenuSceneName));
+            }
+        }
     }
 
-    private IEnumerator HandleWaveOver(int pointsEarned) {
-        yield return new WaitForSeconds(1);
-        if (pointsEarned > 0) {
-            SceneManager.LoadScene(inventorySceneName);
-            currentState = GameState.INVENTORY;
-            CurrentWave++;
-            currentScore += pointsEarned;
-        } else {
-            // Player lost
-            SceneManager.LoadScene(mainMenuSceneName);
-            currentState = GameState.MAINMENU;
-        }
+    private IEnumerator SwapScene(string newScene) {
+        yield return new WaitForSeconds(.5f);
+        SceneManager.LoadScene(newScene);
     }
 
     public void GoToNextScene() {
@@ -76,5 +81,13 @@ public class GameStateManager : PersistentSingleton<GameStateManager> {
 
     public void GoToMainMenu() {
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public int GetBestScore() {
+        return bestScore;
+    }
+
+    public int GetCurrentScore() {
+        return currentScore;
     }
 }

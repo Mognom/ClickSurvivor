@@ -5221,7 +5221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1142309d808be544dbe4a8006a829a76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 2
+  maxHealth: 1
+  waveOverChannel: {fileID: 11400000, guid: e6f1842b53aa0884b9ce22fa59f8474b, type: 2}
 --- !u!58 &7037863636253624071
 CircleCollider2D:
   m_ObjectHideFlags: 0
