@@ -39,13 +39,13 @@ public class TurretController : MonoBehaviour {
         if (currentTarget != null) {
             // Face towards target
             Vector3 direction = currentTarget.transform.position - transform.position;
-            float targetAngle = Vector3.Angle(Vector3.up, direction);
-            float newZ = Mathf.SmoothDampAngle(transform.eulerAngles.z, targetAngle, ref rotationSpeed, rotationTime);
-            transform.rotation = Quaternion.Euler(0, 0, newZ);
-            //transform.up = currentTarget.transform.position - transform.position;
 
-            // Attack target
-            if (currentAttackCharge > attackChargeTime) {
+            float targetAngle = Vector2.SignedAngle(Vector3.up, direction);
+            float newZAngle = Mathf.SmoothDampAngle(transform.eulerAngles.z, targetAngle, ref rotationSpeed, rotationTime);
+            transform.rotation = Quaternion.Euler(0, 0, newZAngle);
+
+            // Attack target if charged and facing it
+            if (currentAttackCharge > attackChargeTime && Mathf.Abs(targetAngle - newZAngle) % 360 < 2) {
                 currentAttackCharge = 0;
                 freezeCounter = 0;
                 ProyectileBehaviour newProyectile = proyectilePrefab.Spawn(transform.position, Quaternion.identity);

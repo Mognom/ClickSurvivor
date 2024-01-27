@@ -559,10 +559,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaveManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5305095425346968505, guid: afab0d78073600b4e96fd73dc36994d1, type: 3}
-      propertyPath: enemyPoints
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
