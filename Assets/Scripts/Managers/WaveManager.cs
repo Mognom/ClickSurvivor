@@ -70,9 +70,11 @@ public class WaveManager : Singleton<WaveManager> {
     }
 
     private void EnemyDied(EnemyBehaviour enemy) {
+        enemy.OnDeath -= EnemyDied;
         enemyList.Remove(enemy);
 
-        if (enemyList.Count <= 0) {
+        if (remainingEnemyPoints <= 0 && enemyList.Count <= 0) {
+            Debug.Log("wave over!");
             waveOverChannel.PostEvent(enemyPoints * GameStateManager.I.CurrentWave);
         }
 
