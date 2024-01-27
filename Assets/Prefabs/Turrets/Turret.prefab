@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 5475223837058880578}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.05, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -133,6 +133,8 @@ MonoBehaviour:
   baseAttacksChargeTime: 1
   baseAttackDamage: 1
   proyectilePrefab: {fileID: 1548954111844516425, guid: e986a1eb9d8d3894d8e33270ac0908f4, type: 3}
+  rotationTime: 0.09
+  freezeAfterShootTime: 0.3
 --- !u!82 &1204478225545365916
 AudioSource:
   m_ObjectHideFlags: 0

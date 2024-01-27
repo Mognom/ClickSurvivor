@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5305095425346968505}
   - component: {fileID: 6463282597739553555}
   - component: {fileID: 6251239743776765577}
+  - component: {fileID: 2301780846176912970}
   m_Layer: 0
   m_Name: WaveManager
   m_TagString: Untagged
@@ -67,11 +68,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waveOverChannel: {fileID: 11400000, guid: e6f1842b53aa0884b9ce22fa59f8474b, type: 2}
   items:
+  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
+  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
   - {fileID: 11400000, guid: 34c5e8158d759bd468aecdf21a978677, type: 2}
   - {fileID: 11400000, guid: 4fe71adc5d9b5bf4ab41a69d95175535, type: 2}
   - {fileID: 11400000, guid: 4fe71adc5d9b5bf4ab41a69d95175535, type: 2}
-  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
-  - {fileID: 11400000, guid: 65fec9b2575b2b045ba904cfa475c97c, type: 2}
 --- !u!82 &6251239743776765577
 AudioSource:
   m_ObjectHideFlags: 0
@@ -168,3 +169,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2301780846176912970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3544413427397846208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c96d19079bea8a84abce1304094e552e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
