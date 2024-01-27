@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TurretItem
   m_EditorClassIdentifier: 
   dropChance: 0
-  itemName: 
+  itemName: Turret
   description: 
   inventoryStatModifier:
     effectMultiplier: 0
@@ -34,5 +34,5 @@ MonoBehaviour:
     damageIncrease: 0
     clicksPerSecond: 0
     dropChanceIncrease: 0
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 5891052637641184604, guid: cf969dc1f3bb27d488a3cfb1746a592f, type: 3}
   itemSprite: {fileID: 3294764341187530547, guid: a8957aa0310d74447ade395a82e4b6b7, type: 3}

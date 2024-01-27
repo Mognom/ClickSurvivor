@@ -38,19 +38,6 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    //private void Update() {
-    //    if (CurrentlyHeldItem != null) {
-    //        // Draw a greyed out item on the cursor as it is being dragged
-    //        heldItemRendered.gameObject.SetActive(true);
-    //        heldItemRendered.sprite = CurrentlyHeldItem.ItemSprite;
-    //        Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //        newPos.z = 0;
-    //        heldItemRendered.transform.position = newPos;
-    //    } else {
-    //        heldItemRendered.gameObject.SetActive(false);
-    //    }
-    //}
-
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode) {
         // TODO Fully render both inventories
         FullyRenderInventories();
@@ -194,7 +181,7 @@ public class InventoryManager : PersistentSingleton<InventoryManager> {
     }
 
     public AggregatedInventoryItemEffects GetAggregatedInventoryItemEffects() {
-        return playerInventory.GetAggregatedPlayerStats();
+        return playerInventory.GetAggregatedInventoryItemEffects();
     }
 }
 

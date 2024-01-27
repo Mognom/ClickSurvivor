@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Item;
@@ -147,20 +148,23 @@ public class Inventory {
         }
     }
 
-    public AggregatedInventoryItemEffects GetAggregatedPlayerStats() {
+    public AggregatedInventoryItemEffects GetAggregatedInventoryItemEffects() {
         PlayerStatsModifier stats = new PlayerStatsModifier();
         List<SpawnableItemEffects> spawnableItems = new List<SpawnableItemEffects>();
 
-        foreach (InventorySlot slot in inventoryItems) {
-            if (slot.Item == null) {
-                continue;
-            }
-            PlayerStatsModifier itemStats = slot.Item.StatModifier;
-            float multiplier = slot.GetModifiersTotal();
-            stats += itemStats * multiplier;
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                InventorySlot slot = inventoryItems[y, x];
+                if (slot.Item == null) {
+                    continue;
+                }
+                PlayerStatsModifier itemStats = slot.Item.StatModifier;
+                float multiplier = slot.GetModifiersTotal();
+                stats += itemStats * multiplier;
 
-            if (slot.Item.ItemPrefab != null) {
-                spawnableItems.Add(new SpawnableItemEffects(slot.Item.ItemPrefab, multiplier));
+                if (slot.Item.ItemPrefab != null) {
+                    spawnableItems.Add(new SpawnableItemEffects(slot.Item.ItemPrefab, multiplier, new Tuple<int, int>(x, y)));
+                }
             }
         }
 
@@ -169,20 +173,23 @@ public class Inventory {
 
     public struct AggregatedInventoryItemEffects {
         public PlayerStatsModifier PlayerStats { get; private set; }
-        public List<SpawnableItemEffects> Items { get; private set; }
+        public List<SpawnableItemEffects> SpawnableItems { get; private set; }
 
         public AggregatedInventoryItemEffects(PlayerStatsModifier playerStats, List<SpawnableItemEffects> items) {
             PlayerStats = playerStats;
-            Items = items;
+            SpawnableItems = items;
         }
     }
 
     public struct SpawnableItemEffects {
         public GameObject Prefab { get; private set; }
         public float StatsMultiplier { get; private set; }
-        public SpawnableItemEffects(GameObject prefab, float statsMultiplier) {
+
+        public Tuple<int, int> Pos { get; private set; }
+        public SpawnableItemEffects(GameObject prefab, float statsMultiplier, Tuple<int, int> pos) {
             Prefab = prefab;
             StatsMultiplier = statsMultiplier;
+            Pos = pos;
         }
     }
 }
