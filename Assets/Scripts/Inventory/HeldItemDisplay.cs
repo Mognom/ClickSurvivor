@@ -4,10 +4,10 @@ using static Item.InventoryStatsModifier;
 public class HeldItemDisplay : MonoBehaviour {
 
     [SerializeField] private GameObject[] affectedIcons;
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private float verticalOffset;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     public void Start() {
-        spriteRenderer = GetComponent<SpriteRenderer>();
         InventoryManager.I.currentlyHeldItemChange += OnCurrentlyHeldItemChange;
 
         foreach (GameObject affectedIcon in affectedIcons) {
@@ -38,6 +38,7 @@ public class HeldItemDisplay : MonoBehaviour {
     public void Update() {
         Vector3 newPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         newPos.z = 0;
+        newPos.y += verticalOffset;
         transform.position = newPos;
     }
 }
