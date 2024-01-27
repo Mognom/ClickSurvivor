@@ -30,6 +30,8 @@ public class ProyectileBehaviour : MonoBehaviour {
     public void SetTargetAndDamage(EnemyBehaviour target, float damage) {
         this.target = target;
         this.damage = damage;
+        // Set the right rotation towards the target
+        transform.right = transform.position - target.transform.position;
     }
 
     private void OnDisable() {

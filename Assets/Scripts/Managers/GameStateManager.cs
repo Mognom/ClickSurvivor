@@ -27,7 +27,6 @@ public class GameStateManager : PersistentSingleton<GameStateManager> {
     protected override void Awake() {
         base.Awake();
         if (GameStateManager.I == this) {
-            Debug.Log("AWAKESSS");
             waveOverChannel.Channel += OnWaveOver;
             CurrentWave = 1;
             currentScore = 0;
